@@ -9,7 +9,9 @@
 import Foundation
 class ListViewModel {
     func getData(_ completion: @escaping (Result<Data, CustomError>) -> Void) {
-        let url = "https://api.petfinder.com/v2/animals"
+        let url = "https://pagosdigitales-dev.azurewebsites.net/v2/users/user"
+            //"https://api.petfinder.com/v2/animals"
+        
         NetworkManager.shared.request(url) { (result) in
             completion(result)
         }

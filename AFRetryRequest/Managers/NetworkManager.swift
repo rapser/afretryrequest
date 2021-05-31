@@ -14,10 +14,24 @@ class NetworkManager {
     typealias completionHandler = ((Result<Data, CustomError>) -> Void)
     var request: Alamofire.Request?
     let retryLimit = 3
-    let authorize = "https://api.petfinder.com/v2/oauth2/token"
+    let authorize = "https://pagosdigitales-dev.azurewebsites.net/v2/users/login"
+    let authorize2 = "https://pagosdigitales-dev.azurewebsites.net/v2/users/user/refresh-token"
+
+        //"https://api.petfinder.com/v2/oauth2/token"
     func authorize(parameters: [String: Any]?, completion: @escaping completionHandler) {
         request?.cancel()
         request = AF.request(authorize, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
+            if let data = response.data {
+                completion(.success(data))
+            } else {
+                completion(.failure(.unavailableServer))
+            }
+        }
+    }
+    
+    func authorize2(parameters: [String: Any]?, completion: @escaping completionHandler) {
+        request?.cancel()
+        request = AF.request(authorize2, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
             if let data = response.data {
                 completion(.success(data))
             } else {
@@ -32,6 +46,13 @@ class NetworkManager {
         AF.request(url, method: method, parameters: parameters, encoding: encoding,
                    headers: headers, interceptor: interceptor ?? self).validate().responseJSON { (response) in
             if let data = response.data {
+//                print(url)
+//                do{
+//                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
+//                    print(jsonResponse) //Response result
+//                } catch let parsingError {
+//                    print("Error", parsingError)
+//                }
                 completion(.success(data))
             } else {
                 completion(.failure(.unavailableServer))

@@ -34,13 +34,16 @@ extension NetworkManager: RequestInterceptor {
     }
     
     func refreshToken(completion: @escaping (_ isSuccess: Bool) -> Void) {
-        guard let apiKey = UserDefaultsManager.shared.getUserCredentials().apiKey,
-            let secretKey = UserDefaultsManager.shared.getUserCredentials().secretKey else { return }
-        let parameters = ["grant_type": "client_credentials", "client_id": apiKey, "client_secret": secretKey]
-        AF.request(authorize, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
+        guard let refresh = UserDefaultsManager.shared.getRefreshToken() else { return }
+        let parameters = ["refreshToken": refresh]
+//        guard let apiKey = UserDefaultsManager.shared.getUserCredentials().apiKey,
+//            let secretKey = UserDefaultsManager.shared.getUserCredentials().secretKey else { return }
+        //let parameters = ["grant_type": "client_credentials", "client_id": apiKey, "client_secret": secretKey]
+        AF.request(authorize2, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
             if let data = response.data, let token = (try? JSONSerialization.jsonObject(with: data, options: [])
-                as? [String: Any])?["access_token"] as? String {
+                as? [String: Any])?["token"] as? String, let refreshToken = (try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any])?["refreshToken"] as? String {
                 UserDefaultsManager.shared.setToken(token: token)
+                UserDefaultsManager.shared.setRefreshToken(token: refreshToken)
                 print("\nRefresh token completed successfully. New token is: \(token)\n")
                 completion(true)
             } else {

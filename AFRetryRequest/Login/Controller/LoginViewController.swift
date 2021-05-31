@@ -21,11 +21,16 @@ class LoginViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        apiKeyTF.text = "06686674"
+        secretKeyTF.text = "111111"
+        
         if let _ = UserDefaultsManager.shared.getToken() {
             performSegue(withIdentifier: "toListView", sender: self)
         }
     }
     @IBAction func loginButtonDidTap(_ sender: UIButton) {
+        
         guard let apiKey = apiKeyTF.text, let secretKey = secretKeyTF.text else { return }
         viewModel.login(apiKey: apiKey, secretKey: secretKey)
     }

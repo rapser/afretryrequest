@@ -13,6 +13,7 @@ class UserDefaultsManager {
         case secretKey
         case token
         case isSignedIn
+        case refreshToken
     }
     static let shared: UserDefaultsManager = {
         return UserDefaultsManager()
@@ -34,6 +35,15 @@ class UserDefaultsManager {
         UserDefaults.standard.set(token, forKey: Key.token.rawValue)
         UserDefaults.standard.synchronize()
     }
+    
+    func getRefreshToken() -> String? {
+        return UserDefaults.standard.string(forKey: Key.refreshToken.rawValue)
+    }
+    func setRefreshToken(token: String) {
+        UserDefaults.standard.set(token, forKey: Key.refreshToken.rawValue)
+        UserDefaults.standard.synchronize()
+    }
+    
     func signInUser() {
         UserDefaults.standard.set(true, forKey: Key.isSignedIn.rawValue)
         UserDefaults.standard.synchronize()
@@ -45,9 +55,10 @@ class UserDefaultsManager {
     func isUserSignedIn() -> Bool {
         return UserDefaults.standard.bool(forKey: Key.isSignedIn.rawValue)
     }
-    func signIn(apiKey: String, secretKey: String, token: String) {
+    func signIn(apiKey: String, secretKey: String, token: String, refresh: String) {
         setUserCredentials(apiKey: apiKey, secretKey: secretKey)
         setToken(token: token)
+        setRefreshToken(token: refresh)
         signInUser()
     }
 }
