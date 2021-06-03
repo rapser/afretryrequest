@@ -61,4 +61,10 @@ class UserDefaultsManager {
         setRefreshToken(token: refresh)
         signInUser()
     }
+    
+    func signIn(token: String, refresh: String) {
+        setToken(token: token)
+        setRefreshToken(token: refresh)
+        signInUser()
+    }
 }

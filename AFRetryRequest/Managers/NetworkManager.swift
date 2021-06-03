@@ -29,17 +29,6 @@ class NetworkManager {
         }
     }
     
-    func authorize2(parameters: [String: Any]?, completion: @escaping completionHandler) {
-        request?.cancel()
-        request = AF.request(authorize2, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseJSON { response in
-            if let data = response.data {
-                completion(.success(data))
-            } else {
-                completion(.failure(.unavailableServer))
-            }
-        }
-    }
-    
     func request(_ url: String, method: HTTPMethod = .get, parameters: Parameters? = nil,
                  encoding: ParameterEncoding = URLEncoding.queryString, headers: HTTPHeaders? = nil,
                  interceptor: RequestInterceptor? = nil, completion: @escaping completionHandler) {
